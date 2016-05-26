@@ -1,41 +1,50 @@
-# Pandapay
+# PandaPay Stripe Bindings
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/pandapay`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+This is an early development release of the PandaPay Ruby bindings.  Currently, only PandaPay Ecommerce integration with Stripe Connect is supported.
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'pandapay'
+```bash
+  pip install pandapay
 ```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install pandapay
 
 ## Usage
 
-TODO: Write usage instructions here
+The PandaPay ECS client is meant to be a drop-in replacement for users who are already using Stripe and would now like to donate a percentage of their revenue through PandaPay ECS w/ Stripe Connect.  Currently, only the Charge/Donation method is supported.
 
-## Development
+To start processing payments through PandaPay and allocate revenue to charity, this:
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+```ruby
+require 'stripe'
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+Stripe.api_key = "sk_test_mystripesecretkey"
 
-## Contributing
+Stripe::Charge.create(
+  amount: 400,
+  currency: "usd",
+  source: "tok_18An5IGxtonQ6vBUBnw2t7LQ", # obtained with Stripe.js
+  description: "Charge for test@example.com"
+)
+```
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/pandapay.
+becomes this:
 
+```ruby
 
-## License
+require 'pandapay'
 
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+PandaPay.api_key = "sk_test_myPANDAsecretkey"
+
+PandaPay::StripeEcommerce::Charge.create(
+  amount: 400,
+  donation_amount: 100,
+  receipt_email: thedonator@email.com,
+  destination_ein: "12-3456789", # Optional
+  currency: "usd",
+  source: "tok_18An5IGxtonQ6vBUBnw2t7LQ", # still the same token from Stripe.js
+  description: "Charge for test@example.com"
+)
+```
+
+The PandaPay API takes this charge, relays it to Stripe on your behalf using the OAuth token obtained via Stripe Connect, less the donation amount (which will show up in Stripe as a "Panda Fee").  This also works with the standard Stripe **customer** parameter instead of a **source**.
 
