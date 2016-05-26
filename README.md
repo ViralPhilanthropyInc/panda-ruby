@@ -5,7 +5,7 @@ This is an early development release of the PandaPay Ruby bindings.  Currently, 
 ## Installation
 
 ```bash
-  pip install pandapay
+  gem install pandapay
 ```
 
 ## Usage
