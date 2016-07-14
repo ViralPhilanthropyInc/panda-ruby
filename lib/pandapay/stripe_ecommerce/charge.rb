@@ -24,6 +24,7 @@ module PandaPay
         stripe_params = params.dup
 
         params_to_use[:donation_amount] = stripe_params.delete :donation_amount
+        params_to_use[:donation_platform_fee] = stripe_params.delete :donation_platform_fee
         params_to_use[:destination] = stripe_params.delete :destination_ein
         params_to_use[:receipt_email] = stripe_params.delete :receipt_email
         params_to_use[:currency] = stripe_params.delete :currency
