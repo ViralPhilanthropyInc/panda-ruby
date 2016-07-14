@@ -1,3 +1,3 @@
 module PandaPay
-  VERSION = "0.0.0.dev0"
+  VERSION = "0.0.0.dev1"
 end
