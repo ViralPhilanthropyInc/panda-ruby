@@ -34,13 +34,15 @@ module PandaPay
         end
 
         headers = {
-            accept: :json,
-            content_type: :json,
-            params: params_to_use
+          accept: :json,
+          content_type: :json,
+          params: params_to_use
         }.merge opts
 
         api_key = headers.delete(:api_key) || PandaPay.api_key
         api_base = headers.delete(:api_base) || "https://api.pandapay.io/v1"
+
+        response = nil
 
         begin
           response = RestClient::Request.new(
@@ -74,7 +76,7 @@ module PandaPay
             self.send "#{attr}=", value
           end
         end
-      end      
+      end
     end
   end
 end
